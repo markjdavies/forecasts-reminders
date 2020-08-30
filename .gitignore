@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Transpiled JavaScript files
+*.js
+*.js.map
+# With exceptions for non-TS sourced JS files
+!jest.config.js
