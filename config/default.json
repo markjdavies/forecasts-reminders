@@ -1,0 +1,11 @@
+{
+    "telegram": {
+        "url": "https://api.telegram.org/bot"
+    },
+    "db": {
+        "host": "",
+        "databaseName": "",
+        "port": "",
+        "password": ""
+    }
+}
