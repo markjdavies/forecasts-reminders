@@ -2,8 +2,24 @@ import { DatabaseConfig } from './DatabaseConfig';
 import { DataOperations } from '../DataOperations';
 import * as sql from 'mssql';
 
+interface IStoredProcParam {
+    name: string;
+    sqlType: (() => sql.ISqlType) | sql.ISqlType;
+    value: any;
+}
+
 export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     const connectString = `mssql://${config.userName}:${config.password}@${config.host}/${config.databaseName}`;
+
+    const callProcedure = async <T>(
+        name: string,
+        inputs: IStoredProcParam[],
+    ): Promise<T> => {
+        const request = await getRequest();
+        inputs.map((i) => request.input(i.name, i.sqlType, i.value));
+        const result = await request.execute<T>(name);
+        return result.recordset[0][0];
+    };
 
     const getRequest = async (): Promise<sql.Request> => {
         const pool = new sql.ConnectionPool(connectString);
@@ -12,8 +28,32 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     };
 
     return {
-        getChatIdForPlayer: async (playerId: number) => {
-            const request = await getRequest();
+        getChatIdForPlayer: async (playerId: Number) => {
+            return await callProcedure<string>('telegram.GetChatIdForPlayer', [
+                {
+                    name: 'playerId',
+                    sqlType: sql.Int,
+                    value: playerId,
+                },
+            ]);
+        },
+        getPlayersNextMatchWeek: async (playerId: Number) => {
+            return await callProcedure<number>(
+                'telegram.getPlayersNextMatchWeek',
+                [
+                    {
+                        name: 'playerId',
+                        sqlType: sql.Int,
+                        value: playerId,
+                    },
+                ],
+            );
+        },
+        getNextMatchWeek: async () => {
+            return await callProcedure<Number>(
+                'telegram.getPlayersNextMatchWeek',
+                [],
+            );
         },
     };
 };
