@@ -1,4 +1,4 @@
-import { IDatabaseConfig } from './DatabaseConfig';
+import { DatabaseConfig } from './src/dal/mssql/DatabaseConfig';
 
 export interface IForecastsDatabase {
     getChatIdForPlayer: (playerId: number) => string;
@@ -13,7 +13,7 @@ export interface IForecastsDatabase {
 }
 
 export const ForecastsDatabase = (
-    config: IDatabaseConfig,
+    config: DatabaseConfig,
 ): IForecastsDatabase => {
     return null;
 };
