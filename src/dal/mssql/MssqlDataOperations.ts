@@ -5,7 +5,7 @@ import * as sql from 'mssql';
 interface IStoredProcParam {
     name: string;
     sqlType: (() => sql.ISqlType) | sql.ISqlType;
-    value: any;
+    value: number | string | boolean | undefined;
 }
 
 export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
@@ -28,7 +28,7 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     };
 
     return {
-        getChatIdForPlayer: async (playerId: Number) => {
+        getChatIdForPlayer: async (playerId: number) => {
             return await callProcedure<string>('telegram.GetChatIdForPlayer', [
                 {
                     name: 'playerId',
@@ -37,7 +37,7 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
                 },
             ]);
         },
-        getPlayersNextMatchWeek: async (playerId: Number) => {
+        getPlayersNextMatchWeek: async (playerId: number) => {
             return await callProcedure<number>(
                 'telegram.getPlayersNextMatchWeek',
                 [
@@ -50,59 +50,35 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
             );
         },
         getNextMatchWeek: async () => {
-            return await callProcedure<Number>(
+            return await callProcedure<number>(
                 'telegram.getPlayersNextMatchWeek',
                 [],
             );
         },
+        getReminderStatus: async (playerId: number, week: number) => {
+            return await callProcedure<boolean>('telegram.getReminderStatus', [
+                {
+                    name: 'playerId',
+                    sqlType: sql.Int,
+                    value: playerId,
+                },
+                {
+                    name: 'week',
+                    sqlType: sql.Int,
+                    value: week,
+                },
+            ]);
+        },
+        setRemiderStatus: async (
+            playerId: number,
+            week: number,
+            reminderSent: boolean,
+        ) => {
+            const request = await getRequest();
+            request.input('playerId', sql.Int, playerId);
+            request.input('week', sql.Int, week);
+            request.input('reminderSent', sql.Bit, reminderSent);
+            await request.execute('telegram.setRemiderStatus');
+        },
     };
 };
-
-//     public async GetPlayerFromInvitationId(
-//         invitationGuid: string
-//     ): Promise<Player> {
-//         const request = await this.getRequest();
-//         request.input('invitationId', sql.UniqueIdentifier, invitationGuid);
-//         const result = await request.execute<Player>(
-//             'telegram.GetPlayerFromInvitationId'
-//         );
-//         return result.recordsets[0][0];
-//     }
-
-//     public async SetPlayerChatId(
-//         playerId: number,
-//         chatId: number
-//     ): Promise<void> {
-//         const request = await this.getRequest();
-//         request.input('playerId', sql.Int, playerId);
-//         request.input('chatId', sql.Int, chatId);
-//         await request.execute<Player>('telegram.SetPlayerChatId');
-//         return;
-//     }
-
-//     public async GetPlayerFromChatId(chatId: number): Promise<Player> {
-//         const request = await this.getRequest();
-//         request.input('chatId', sql.Int, chatId);
-//         const result = await request.execute<Player>(
-//             'telegram.GetPlayerFromChatId'
-//         );
-//         return result.recordsets[0][0];
-//     }
-
-//     public async GetNextFixture(): Promise<RoundDate> {
-//         const request = await this.getRequest();
-//         const result = await request.execute<RoundDate>(
-//             'telegram.GetNextFixture'
-//         );
-//         return result.recordsets[0][0];
-//     }
-
-//     public async GetMyNextFixture(playerId: number): Promise<RoundDate> {
-//         const request = await this.getRequest();
-//         request.input('playerId', sql.Int, playerId);
-//         const result = await request.execute<RoundDate>(
-//             'telegram.GetPlayersNextFixture'
-//         );
-//         return result.recordsets[0][0];
-//     }
-// }
