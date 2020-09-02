@@ -1,8 +1,35 @@
 import * as sql from 'mssql';
 
 export type SupportedParamTypes = string | number | boolean;
+export type ParameterList = Record<string, SupportedParamTypes>;
 
-export const mapToSqlType = (
+export interface IMssqlStoredProcWrapper {
+    callProcedure: <T>(
+        name: string,
+        params?: ParameterList,
+    ) => Promise<sql.IRecordSet<T>>;
+}
+
+export const storedProcWrapper = (
+    getRequestCallback: () => Promise<sql.Request>,
+): IMssqlStoredProcWrapper => {
+    const callProcedure = async <T>(
+        name: string,
+        params?: ParameterList,
+    ): Promise<sql.IRecordSet<T>> => {
+        const request = await getRequestCallback();
+
+        addInputParams(request, params);
+
+        const result = await request.execute<T>(name);
+
+        return result.recordset;
+    };
+
+    return { callProcedure };
+};
+
+const mapToSqlType = (
     param: SupportedParamTypes,
 ): (() => sql.ISqlType) | sql.ISqlType => {
     if (param === undefined || param === null) {
@@ -22,25 +49,11 @@ export const mapToSqlType = (
     }
 };
 
-export interface ISpParam {
-    name: string;
-    value: SupportedParamTypes;
-}
-
-export const storedProcWrapper = (
-    getRequestCallback: () => Promise<sql.Request>,
-): (<T>(name: string, inputs: ISpParam[]) => Promise<T>) => {
-    const callProcedure = async <T>(
-        name: string,
-        inputs: ISpParam[],
-    ): Promise<T> => {
-        const request = await getRequestCallback();
-        inputs.map((i) => {
-            request.input(i.name, mapToSqlType(i.value), i.value);
+const addInputParams = (request: sql.Request, params?: ParameterList): void => {
+    if (params) {
+        Object.keys(params).map((k) => {
+            const value = params[k];
+            request.input(k, mapToSqlType(value), value);
         });
-        const result = await request.execute<T>(name);
-        return result.recordset[0][0];
-    };
-
-    return callProcedure;
+    }
 };

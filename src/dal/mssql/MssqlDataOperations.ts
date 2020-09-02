@@ -12,45 +12,32 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
         return new sql.Request(pool);
     };
 
-    const spWrapper = storedProcWrapper(getRequest);
+    const callProc = storedProcWrapper(getRequest).callProcedure;
 
     return {
         getChatIdForPlayer: async (playerId: number): Promise<string> => {
-            return await spWrapper<string>('telegram.GetChatIdForPlayer', [
-                {
-                    name: 'playerId',
-                    value: playerId,
-                },
-            ]);
+            return await callProc<string>('telegram.GetChatIdForPlayer', {
+                playerId,
+            })[0][0];
         },
         getPlayersNextMatchWeek: async (playerId: number): Promise<number> => {
-            return await spWrapper<number>('telegram.getPlayersNextMatchWeek', [
-                {
-                    name: 'playerId',
-                    value: playerId,
-                },
-            ]);
+            return await callProc<number>('telegram.getPlayersNextMatchWeek', {
+                playerId,
+            })[0][0];
         },
         getNextMatchWeek: async (): Promise<number> => {
-            return await spWrapper<number>(
+            return await callProc<number>(
                 'telegram.getPlayersNextMatchWeek',
-                [],
-            );
+            )[0][0];
         },
         getReminderStatus: async (
             playerId: number,
             week: number,
         ): Promise<boolean> => {
-            return await spWrapper<boolean>('telegram.getReminderStatus', [
-                {
-                    name: 'playerId',
-                    value: playerId,
-                },
-                {
-                    name: 'week',
-                    value: week,
-                },
-            ]);
+            return await callProc<boolean>('telegram.getReminderStatus', {
+                playerId,
+                week,
+            })[0][0];
         },
         setRemiderStatus: async (
             playerId: number,
