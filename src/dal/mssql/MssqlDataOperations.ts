@@ -1,5 +1,5 @@
 import { DatabaseConfig } from './DatabaseConfig';
-import { DataOperations } from '../DataOperations';
+import { DataOperations, MatchDatesForReminder } from '../DataOperations';
 import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
 
@@ -15,6 +15,17 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     const callProc = storedProcWrapper(getRequest).callProcedure;
 
     return {
+        getAllPlayerNextMatchDatesForReminder: async (
+            lookaheadDays: number,
+        ): Promise<MatchDatesForReminder> => {
+            const result = await callProc<MatchDatesForReminder>(
+                'telegram.getAllPlayerNextMatchDatesForReminder',
+                {
+                    lookaheadDays,
+                },
+            );
+            return result[0];
+        },
         getChatIdForPlayer: async (playerId: number): Promise<string> => {
             return await callProc<string>('telegram.GetChatIdForPlayer', {
                 playerId,
