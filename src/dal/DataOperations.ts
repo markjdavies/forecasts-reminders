@@ -1,7 +1,7 @@
 export interface DataOperations {
     getAllPlayerNextMatchDatesForReminder: (
         lookaheadDays: number,
-    ) => Promise<MatchDatesForReminder>;
+    ) => Promise<MatchDatesForReminder[]>;
     getChatIdForPlayer: (playerId: number) => Promise<string>;
     getPlayersNextMatchWeek: (playerId: number) => Promise<number>;
     getNextMatchWeek: () => Promise<number>;
@@ -11,11 +11,24 @@ export interface DataOperations {
         week: number,
         reminderSent: boolean,
     ) => Promise<void>;
+    getPlayersNextFixture: (
+        playerId: number,
+    ) => Promise<NextMatchSubmissionStatus | undefined>;
 }
 
 export interface MatchDatesForReminder {
     periodNumber: number;
     startDate: Date;
     playerId: number;
-    ChatId: string;
+    chatId: string;
+}
+
+export interface NextMatchSubmissionStatus {
+    date: Date;
+    roundName: string;
+    home: number;
+    away: number;
+    homeTeam: string;
+    awayTeam: string;
+    submissionTime: Date;
 }

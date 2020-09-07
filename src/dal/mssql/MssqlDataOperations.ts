@@ -1,7 +1,12 @@
 import { DatabaseConfig } from './DatabaseConfig';
-import { DataOperations, MatchDatesForReminder } from '../DataOperations';
+import {
+    DataOperations,
+    MatchDatesForReminder,
+    NextMatchSubmissionStatus,
+} from '../DataOperations';
 import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
+import { res } from 'pino-std-serializers';
 
 export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     const connectString = `mssql://${config.userName}:${config.password}@${config.host}/${config.databaseName}`;
@@ -17,14 +22,14 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     return {
         getAllPlayerNextMatchDatesForReminder: async (
             lookaheadDays: number,
-        ): Promise<MatchDatesForReminder> => {
+        ): Promise<MatchDatesForReminder[]> => {
             const result = await callProc<MatchDatesForReminder>(
                 'telegram.getAllPlayerNextMatchDatesForReminder',
                 {
                     lookaheadDays,
                 },
             );
-            return result[0];
+            return result;
         },
         getChatIdForPlayer: async (playerId: number): Promise<string> => {
             return await callProc<string>('telegram.GetChatIdForPlayer', {
@@ -60,6 +65,20 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
             request.input('week', sql.Int, week);
             request.input('reminderSent', sql.Bit, reminderSent);
             await request.execute('telegram.setRemiderStatus');
+        },
+        getPlayersNextFixture: async (
+            playerId: number,
+        ): Promise<NextMatchSubmissionStatus | undefined> => {
+            const request = await getRequest();
+            request.input('playerId', sql.Int, playerId);
+            const result = await request.execute(
+                'telegram.getPlayersNextFixture',
+            );
+            if (result.rowsAffected.length > 0) {
+                return result[0];
+            } else {
+                return undefined;
+            }
         },
     };
 };
