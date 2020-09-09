@@ -108,3 +108,6 @@ dist
 *.js.map
 # With exceptions for non-TS sourced JS files
 !jest.config.js
+
+# Local config
+config/local*.json

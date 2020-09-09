@@ -6,10 +6,9 @@ import {
 } from '../DataOperations';
 import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
-import { res } from 'pino-std-serializers';
 
 export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
-    const connectString = `mssql://${config.userName}:${config.password}@${config.host}/${config.databaseName}`;
+    const connectString = `mssql://${config.username}:${config.password}@${config.host}/${config.databaseName}`;
 
     const getRequest = async (): Promise<sql.Request> => {
         const pool = new sql.ConnectionPool(connectString);
@@ -41,7 +40,7 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
                 playerId,
             })[0][0];
         },
-        getNextMatchWeek: async (): Promise<number> => {
+        getNextMatchPeriod: async (): Promise<number> => {
             return await callProc<number>(
                 'telegram.getPlayersNextMatchWeek',
             )[0][0];
@@ -72,10 +71,10 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
             const request = await getRequest();
             request.input('playerId', sql.Int, playerId);
             const result = await request.execute(
-                'telegram.getPlayersNextFixture',
+                'telegram.GetPlayersNextFixture',
             );
-            if (result.rowsAffected.length > 0) {
-                return result[0];
+            if (result.recordsets.length > 0) {
+                return result.recordsets[0][0];
             } else {
                 return undefined;
             }

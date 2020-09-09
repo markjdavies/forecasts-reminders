@@ -4,8 +4,8 @@ export interface DataOperations {
     ) => Promise<MatchDatesForReminder[]>;
     getChatIdForPlayer: (playerId: number) => Promise<string>;
     getPlayersNextMatchWeek: (playerId: number) => Promise<number>;
-    getNextMatchWeek: () => Promise<number>;
-    getReminderStatus: (playerId: number, week: number) => Promise<boolean>;
+    getNextMatchPeriod: () => Promise<number>;
+    getReminderStatus: (playerId: number, period: number) => Promise<boolean>;
     setRemiderStatus: (
         playerId: number,
         week: number,
@@ -24,8 +24,8 @@ export interface MatchDatesForReminder {
 }
 
 export interface NextMatchSubmissionStatus {
-    date: Date;
     roundName: string;
+    date: Date;
     home: number;
     away: number;
     homeTeam: string;
