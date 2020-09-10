@@ -1,4 +1,4 @@
-import * as Config from 'config';
+// import * as Config from 'config';
 import * as pino from 'pino';
 import { buildReminder } from '../api-handler-factories/reminder-factory';
 import { MssqlDataOperations } from './dal/mssql/MssqlDataOperations';
@@ -11,7 +11,7 @@ export const configureReminderHandler = (): ((
     _req: NowRequest,
     res: NowResponse,
 ) => void) => {
-    const config = Config.get<IAppConfig>('app');
+    const config: IAppConfig = JSON.parse(`${process.env.NODE_CONFIG}`); // Config.get<IAppConfig>('app');
 
     const logger = pino(config.log);
     const db = MssqlDataOperations(config.db);
