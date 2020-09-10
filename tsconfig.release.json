@@ -5,5 +5,5 @@
         "outDir": "public",
         "removeComments": true
     },
-    "include": ["src/**/*", "api/**/*"]
+    "include": ["src/**/*"]
 }
