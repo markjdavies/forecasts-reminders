@@ -5,6 +5,7 @@ import { messageBuilder } from './messageBuilder';
 import { telegramWrapper } from './sendMessage';
 import { NowRequest, NowResponse } from '@vercel/node';
 import { IAppConfig } from './app-config/appConfig';
+import { logger } from './utils/logger';
 
 export const configureReminderHandler = (): ((
     _req: NowRequest,
