@@ -35,7 +35,7 @@
         "vercel-node-server": "^2.2.1"
     },
     "scripts": {
-        "now-build": "tsc -p tsconfig.release.json",
+        "now-build": "npm run lint",
         "build": "npm run lint && tsc",
         "lint": "eslint . --ext .ts,.tsx",
         "lint:fix": "eslint --fix . --ext .ts,.tsx",
