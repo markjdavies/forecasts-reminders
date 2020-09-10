@@ -1,5 +1,4 @@
 import * as Config from 'config';
-const logger = require('pino')();
 import { buildReminder } from '../api-handler-factories/reminder-factory';
 import { MssqlDataOperations } from './dal/mssql/MssqlDataOperations';
 import { messageBuilder } from './messageBuilder';
