@@ -1,4 +1,4 @@
-import { DatabaseConfig } from './DatabaseConfig';
+import { IDatabaseConfig } from './DatabaseConfig';
 import {
     DataOperations,
     MatchDatesForReminder,
@@ -7,7 +7,9 @@ import {
 import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
 
-export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
+export const MssqlDataOperations = (
+    config: IDatabaseConfig,
+): DataOperations => {
     const connectString = `mssql://${config.username}:${config.password}@${config.host}/${config.databaseName}`;
 
     const getRequest = async (): Promise<sql.Request> => {
@@ -47,22 +49,22 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
         },
         getReminderStatus: async (
             playerId: number,
-            week: number,
+            periodNumber: number,
         ): Promise<boolean> => {
             return await callProc<boolean>('telegram.getReminderStatus', {
                 playerId,
-                week,
+                periodNumber,
             })[0][0];
         },
         setRemiderStatus: async (
             playerId: number,
-            week: number,
-            reminderSent: boolean,
+            periodNumber: number,
+            reminderSent: Date,
         ): Promise<void> => {
             const request = await getRequest();
             request.input('playerId', sql.Int, playerId);
-            request.input('week', sql.Int, week);
-            request.input('reminderSent', sql.Bit, reminderSent);
+            request.input('periodNumber', sql.Int, periodNumber);
+            request.input('reminderSent', sql.DateTime, reminderSent);
             await request.execute('telegram.setRemiderStatus');
         },
         getPlayersNextFixture: async (

@@ -8,8 +8,8 @@ export interface DataOperations {
     getReminderStatus: (playerId: number, period: number) => Promise<boolean>;
     setRemiderStatus: (
         playerId: number,
-        week: number,
-        reminderSent: boolean,
+        periodNumber: number,
+        reminderSent: Date,
     ) => Promise<void>;
     getPlayersNextFixture: (
         playerId: number,

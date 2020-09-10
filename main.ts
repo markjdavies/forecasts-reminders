@@ -5,4 +5,4 @@ import { configureReminderHandler } from './src/configureReminderHandler';
 const reminder = configureReminderHandler();
 const server = createServer(reminder);
 
-server.listen(Config.get<number>('port'));
+server.listen(Config.get<number>('app.port'));

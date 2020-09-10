@@ -1,6 +1,6 @@
 import { NextMatchSubmissionStatus } from './dal/DataOperations';
 import { Logger } from 'pino';
-import { format } from 'fecha';
+import { format } from 'date-fns';
 
 export type MessageBuilder = (
     fixtureDetails: NextMatchSubmissionStatus,
@@ -12,7 +12,7 @@ export const messageBuilder = (
 ): MessageBuilder => {
     return (fixtureDetails: NextMatchSubmissionStatus): string => {
         const homeOrAway = fixtureDetails.awayTeam ? 'H' : 'A';
-        const formattedDate = format(fixtureDetails.date, 'ddd Do MMM');
+        const formattedDate = format(fixtureDetails.date, 'EEE do MMM');
         const opponent = fixtureDetails.homeTeam
             ? fixtureDetails.homeTeam
             : fixtureDetails.awayTeam;
