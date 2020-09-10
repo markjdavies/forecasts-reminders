@@ -11,10 +11,7 @@ export const configureReminderHandler = (): ((
     _req: NowRequest,
     res: NowResponse,
 ) => void) => {
-    const config = {
-        ...{ app: Config.get<IAppConfig>('app') },
-        ...{ app: process.env.app },
-    };
+    const config = Config.get<IAppConfig>('app');
 
     const logger = pino(config.log);
     const db = MssqlDataOperations(config.db);
