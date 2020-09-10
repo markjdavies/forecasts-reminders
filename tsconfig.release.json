@@ -5,5 +5,5 @@
         "outDir": "public",
         "removeComments": true
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "main.ts"]
 }
