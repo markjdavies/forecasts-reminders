@@ -19,5 +19,5 @@
         "resolveJsonModule": true,
         "strictNullChecks": true
     },
-    "include": ["src/**/*", "api/**/*"]
+    "include": ["src/**/*", "api/**/*", "main.ts"]
 }

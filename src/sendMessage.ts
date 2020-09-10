@@ -11,7 +11,7 @@ export const telegramWrapper = (
     log: Logger,
 ): ITelegramSender => {
     const client = axios.create({
-        baseURL: `${config.url}${config.token}/`,
+        baseURL: `${config.url}${config.botToken}/`,
     });
 
     return {
