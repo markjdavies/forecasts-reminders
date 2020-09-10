@@ -12,7 +12,7 @@ export const configureReminderHandler = (): ((
     res: NowResponse,
 ) => void) => {
     const config = {
-        ...Config.get<IAppConfig>('app'),
+        ...{ app: Config.get<IAppConfig>('app') },
         ...{ app: process.env.app },
     };
 
