@@ -1,4 +1,4 @@
-import * as pino from 'pino';
+import { default as pino } from 'pino';
 
 export const logger = pino({
     name: 'forecasts-reminder',
