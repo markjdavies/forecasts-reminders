@@ -1,4 +1,4 @@
-import * as Config from 'config';
+import { default as Config } from 'config';
 import { buildReminder } from '../api-handler-factories/reminder-factory';
 import { MssqlDataOperations } from './dal/mssql/MssqlDataOperations';
 import { messageBuilder } from './messageBuilder';
