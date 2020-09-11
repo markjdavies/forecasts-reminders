@@ -8,7 +8,7 @@ import { IAppConfig } from './app-config/appConfig';
 import { logger } from './utils/logger';
 
 export const configureReminderHandler = (): ((
-    _req: NowRequest,
+    req: NowRequest,
     res: NowResponse,
 ) => Promise<void>) => {
     const config = Config.get<IAppConfig>('app');
@@ -28,4 +28,15 @@ export const configureReminderHandler = (): ((
     );
     logger.info('Configured reminderHandler');
     return handler;
+};
+
+export const configurePing = (): ((
+    req: NowRequest,
+    res: NowResponse,
+) => Promise<void>) => {
+    const ping = async (_req: NowRequest, res: NowResponse): Promise<void> => {
+        res.status(200).json('pong');
+    };
+
+    return ping;
 };

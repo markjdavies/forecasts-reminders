@@ -1,7 +1,5 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import { configurePing } from '../src/configureReminderHandler';
 
-const ping = async (_req: NowRequest, res: NowResponse): Promise<void> => {
-    res.status(200).json('pong');
-};
+const ping = configurePing();
 
 export default ping;
