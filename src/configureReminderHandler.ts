@@ -11,6 +11,7 @@ export const configureReminderHandler = (): ((
     req: NowRequest,
     res: NowResponse,
 ) => Promise<void>) => {
+    console.log('NODE_CONFIG_DIR: ' + Config.util.getEnv('NODE_CONFIG_DIR'));
     const config = Config.get<IAppConfig>('app');
 
     const db = MssqlDataOperations(config.db);
