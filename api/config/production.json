@@ -1,0 +1,27 @@
+{
+    "app": {
+        "telegram": {
+            "url": "https://api.telegram.org/bot",
+            "botToken": ""
+        },
+        "db": {
+            "host": "",
+            "databaseName": "",
+            "username": "",
+            "password": ""
+        },
+        "log": {
+            "name": "forecasts-reminder",
+            "level": "debug"
+        },
+        "reminderService": {
+            "scoreEntryUrl": "https://forecasts.apphb.com/EnterScores/",
+            "lookaheadDays": 2,
+            "betaPlayers": [3],
+            "operatingHours": {
+                "start": 10,
+                "end": 22
+            }
+        }
+    }
+}
