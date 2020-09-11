@@ -10,7 +10,7 @@ import { logger } from './utils/logger';
 export const configureReminderHandler = (): ((
     _req: NowRequest,
     res: NowResponse,
-) => void) => {
+) => Promise<void>) => {
     const config = Config.get<IAppConfig>('app');
 
     const db = MssqlDataOperations(config.db);
