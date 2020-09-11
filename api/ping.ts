@@ -1,4 +1,4 @@
-import { configurePing } from '../src/configureReminderHandler';
+import { configurePing } from '../src/configurePingHandler';
 
 const ping = configurePing();
 
