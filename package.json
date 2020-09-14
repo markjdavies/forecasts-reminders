@@ -9,7 +9,6 @@
         "config": "^3.3.1",
         "date-fns": "^2.16.1",
         "date-fns-tz": "^1.0.10",
-        "express": "^4.17.1",
         "mssql": "^6.2.1",
         "node-telegram-bot-api": "^0.50.0",
         "pino": "^6.5.1"
@@ -17,7 +16,6 @@
     "devDependencies": {
         "@types/config": "0.0.36",
         "@types/date-fns": "^2.6.0",
-        "@types/express": "^4.17.7",
         "@types/jest": "^26.0.10",
         "@types/mssql": "^6.0.4",
         "@types/node": "^14.6.2",
@@ -35,11 +33,12 @@
         "vercel-node-server": "^2.2.1"
     },
     "scripts": {
+        "now-build": "npm run lint",
         "build": "npm run lint && tsc",
         "lint": "eslint . --ext .ts,.tsx",
         "lint:fix": "eslint --fix . --ext .ts,.tsx",
         "format": "npx prettier --loglevel silent --write",
-        "start:local": "NODE_ENV=localhost node main.js",
+        "start:local": "node main.js",
         "test": "npm run build && npm run test:jest",
         "test:jest": "jest --coverage",
         "test:watch": "npm run build && jest --watch"

@@ -1,19 +1,19 @@
-import * as Config from 'config';
-import * as pino from 'pino';
+import { default as Config } from 'config';
 import { buildReminder } from '../api-handler-factories/reminder-factory';
 import { MssqlDataOperations } from './dal/mssql/MssqlDataOperations';
 import { messageBuilder } from './messageBuilder';
 import { telegramWrapper } from './sendMessage';
 import { NowRequest, NowResponse } from '@vercel/node';
 import { IAppConfig } from './app-config/appConfig';
+import { logger } from './utils/logger';
 
 export const configureReminderHandler = (): ((
-    _req: NowRequest,
+    req: NowRequest,
     res: NowResponse,
-) => void) => {
+) => Promise<void>) => {
+    console.log('NODE_CONFIG_DIR: ' + Config.util.getEnv('NODE_CONFIG_DIR'));
     const config = Config.get<IAppConfig>('app');
 
-    const logger = pino(config.log);
     const db = MssqlDataOperations(config.db);
     const telegram = telegramWrapper(config.telegram, logger);
     const msgBuilder = messageBuilder(

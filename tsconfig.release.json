@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-        "rootDir": ".",
-        "outDir": "public",
-        "removeComments": true
-    },
-    "include": ["src/**/*", "api/**/*"]
-}
