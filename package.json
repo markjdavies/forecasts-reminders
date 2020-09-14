@@ -38,7 +38,7 @@
         "lint": "eslint . --ext .ts,.tsx",
         "lint:fix": "eslint --fix . --ext .ts,.tsx",
         "format": "npx prettier --loglevel silent --write",
-        "start:local": "NODE_ENV=localhost node main.js",
+        "start:local": "node main.js",
         "test": "npm run build && npm run test:jest",
         "test:jest": "jest --coverage",
         "test:watch": "npm run build && jest --watch"

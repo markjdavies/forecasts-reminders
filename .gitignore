@@ -110,4 +110,4 @@ dist
 !jest.config.js
 
 # Local config
-config/local*.json
+config/local.*
