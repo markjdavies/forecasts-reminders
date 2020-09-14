@@ -1,5 +1,5 @@
 import { createServer } from 'vercel-node-server';
-import * as Config from 'config';
+import { default as Config } from 'config';
 import { configureReminderHandler } from './src/configureReminderHandler';
 
 const reminder = configureReminderHandler();
