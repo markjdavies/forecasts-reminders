@@ -1,4 +1,3 @@
-import { default as Config } from 'config';
 import { buildReminder } from '../api-handler-factories/reminder-factory';
 import { MssqlDataOperations } from './dal/mssql/MssqlDataOperations';
 import { messageBuilder } from './messageBuilder';
@@ -6,12 +5,12 @@ import { telegramWrapper } from './sendMessage';
 import { NowRequest, NowResponse } from '@vercel/node';
 import { IAppConfig } from './app-config/appConfig';
 import { logger } from './utils/logger';
+import Config from './config';
 
 export const configureReminderHandler = (): ((
     req: NowRequest,
     res: NowResponse,
 ) => Promise<void>) => {
-    console.log('NODE_CONFIG_DIR: ' + Config.util.getEnv('NODE_CONFIG_DIR'));
     const config = Config.get<IAppConfig>('app');
 
     const db = MssqlDataOperations(config.db);
