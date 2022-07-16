@@ -43,8 +43,9 @@ export const configureReminderHandler = (): ((
         _req: NowRequest,
         res: NowResponse,
     ): Promise<void> => {
-        await postgridSender(res);
-        await telegramSender(res);
+        const postal = await postgridSender();
+        const telegram = await telegramSender();
+        res.json({ postal, telegram });
     };
     return handler;
 };

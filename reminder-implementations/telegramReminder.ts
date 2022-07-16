@@ -1,10 +1,17 @@
-import { NowResponse } from '@vercel/node';
 import { Logger } from 'pino';
-import { DataOperations } from '../src/dal/DataOperations';
+import {
+    DataOperations,
+    MatchDatesForReminder,
+} from '../src/dal/DataOperations';
 import { IReminderServiceConfig } from '../src/app-config/appConfig';
 import { ITelegramSender } from '../src/telegram';
 import { MessageBuilder } from '../src/messageBuilder';
 import { utcToZonedTime } from 'date-fns-tz';
+
+export type ReminderResponse = {
+    message?: string;
+    reminders?: MatchDatesForReminder[];
+};
 
 export const telegramReminderService = (
     log: Logger,
@@ -12,7 +19,7 @@ export const telegramReminderService = (
     telegram: ITelegramSender,
     messageBuilder: MessageBuilder,
     config: IReminderServiceConfig,
-): ((res: NowResponse) => Promise<void>) => {
+): (() => Promise<ReminderResponse>) => {
     const { lookaheadDays, operatingHours } = config;
 
     const ignoreUntilOperatingHours = (): boolean => {
@@ -23,10 +30,9 @@ export const telegramReminderService = (
         );
     };
 
-    const sendTelegramReminders = async (res: NowResponse): Promise<void> => {
+    const sendTelegramReminders = async (): Promise<ReminderResponse> => {
         if (ignoreUntilOperatingHours()) {
-            res.json({ message: 'Outside of operating hours.' });
-            return;
+            return { message: 'Outside of operating hours.' };
         }
 
         log.info(`Getting reminders for next ${lookaheadDays} days`);
@@ -54,7 +60,7 @@ export const telegramReminderService = (
 
         await Promise.all(promisedReminders);
 
-        res.json({ reminders });
+        return { reminders };
     };
     return sendTelegramReminders;
 };

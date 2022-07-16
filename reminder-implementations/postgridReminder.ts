@@ -1,6 +1,8 @@
-import { NowResponse } from '@vercel/node';
 import { Logger } from 'pino';
-import { DataOperations } from '../src/dal/DataOperations';
+import {
+    DataOperations,
+    MatchDatesForPostalReminder,
+} from '../src/dal/DataOperations';
 import { IReminderServiceConfig } from '../src/app-config/appConfig';
 import { IPostgridSender } from '../src/postgrid';
 import { MessageBuilder } from '../src/messageBuilder';
@@ -12,10 +14,12 @@ export const postgridReminderService = (
     postgrid: IPostgridSender,
     messageBuilder: MessageBuilder,
     config: IReminderServiceConfig,
-): ((res: NowResponse) => Promise<void>) => {
+): (() => Promise<MatchDatesForPostalReminder[]>) => {
     const { lookaheadDaysPostal } = config;
 
-    const sendTelegramReminders = async (res: NowResponse): Promise<void> => {
+    const sendTelegramReminders = async (): Promise<
+        MatchDatesForPostalReminder[]
+    > => {
         log.info(
             `Getting postal reminders for next ${lookaheadDaysPostal} days`,
         );
@@ -48,12 +52,11 @@ export const postgridReminderService = (
                     UKNow(),
                 );
             }
-            return;
         });
 
         await Promise.all(promisedReminders);
 
-        res.json({ reminders });
+        return reminders;
     };
     return sendTelegramReminders;
 };
