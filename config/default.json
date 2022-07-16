@@ -22,7 +22,7 @@
         "reminderService": {
             "scoreEntryUrl": "https://forecasts.apphb.com/EnterScores/",
             "lookaheadDays": 2,
-            "lookaheadDaysPostal": 7,
+            "lookaheadDaysPostal": 21,
             "operatingHours": {
                 "start": 19,
                 "end": 22
