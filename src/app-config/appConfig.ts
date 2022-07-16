@@ -1,9 +1,11 @@
 import { ITelegramConfig } from '../TelegramConfig';
 import { IDatabaseConfig } from '../dal/mssql/DatabaseConfig';
 import { LoggerOptions } from 'pino';
+import { IPostgridConfig } from '../PostgridConfig';
 
 export interface IAppConfig {
     telegram: ITelegramConfig;
+    postgrid: IPostgridConfig;
     db: IDatabaseConfig;
     log: LoggerOptions;
     reminderService: IReminderServiceConfig;
@@ -13,7 +15,7 @@ export interface IAppConfig {
 export interface IReminderServiceConfig {
     scoreEntryUrl: string;
     lookaheadDays: number;
-    betaPlayers: number[];
+    lookaheadDaysPostal: number;
     operatingHours: IOperatingHours;
 }
 

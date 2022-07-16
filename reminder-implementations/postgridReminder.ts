@@ -1,0 +1,66 @@
+import { NowResponse } from '@vercel/node';
+import { Logger } from 'pino';
+import { DataOperations } from '../src/dal/DataOperations';
+import { IReminderServiceConfig } from '../src/app-config/appConfig';
+import { IPostgridSender } from '../src/postgrid';
+import { MessageBuilder } from '../src/messageBuilder';
+import { utcToZonedTime } from 'date-fns-tz';
+
+export const postgridReminderService = (
+    log: Logger,
+    dataOperations: DataOperations,
+    postgrid: IPostgridSender,
+    messageBuilder: MessageBuilder,
+    config: IReminderServiceConfig,
+): ((res: NowResponse) => Promise<void>) => {
+    const { lookaheadDaysPostal } = config;
+
+    const sendTelegramReminders = async (res: NowResponse): Promise<void> => {
+        log.info(
+            `Getting postal reminders for next ${lookaheadDaysPostal} days`,
+        );
+        const reminders = await dataOperations.getAllPlayerNextMatchDatesForPostalReminder(
+            lookaheadDaysPostal,
+        );
+
+        const promisedReminders = reminders.map(async (reminder) => {
+            const playerMatchSummary = await dataOperations.getPlayersNextFixture(
+                reminder.playerId,
+            );
+            const predictions = await dataOperations.getPlayerPredictions(
+                reminder.playerId,
+                reminder.periodNumber,
+            );
+
+            log.info({ playerMatchSummary });
+            if (playerMatchSummary) {
+                const matchSummary = messageBuilder(playerMatchSummary);
+                await postgrid.send({
+                    matchSummary,
+                    contactId: reminder.contactId,
+                    greeting: reminder.greeting,
+                    predictions,
+                });
+                log.info({ playerMatchSummary });
+                await dataOperations.setPostalRemiderStatus(
+                    reminder.playerId,
+                    reminder.periodNumber,
+                    UKNow(),
+                );
+            }
+            return;
+        });
+
+        await Promise.all(promisedReminders);
+
+        res.json({ reminders });
+    };
+    return sendTelegramReminders;
+};
+
+function UKNow() {
+    const timeNow = Date.now();
+    const timeZone = 'Europe/London';
+    const zonedDate = utcToZonedTime(timeNow, timeZone);
+    return zonedDate;
+}

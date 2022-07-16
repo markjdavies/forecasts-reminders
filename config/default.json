@@ -4,6 +4,11 @@
             "url": "https://api.telegram.org/bot",
             "botToken": ""
         },
+        "postgrid": {
+            "url": "https://api.postgrid.com/print-mail/v1/",
+            "frontTemplateId": "template_kC7uwpp4Vgoc8Gn7UZL3HD",
+            "backTemplateId": "template_7qDKpNhFjXHFkyaW1F1xjs"
+        },
         "db": {
             "host": "",
             "databaseName": "",
@@ -17,9 +22,9 @@
         "reminderService": {
             "scoreEntryUrl": "https://forecasts.apphb.com/EnterScores/",
             "lookaheadDays": 2,
-            "betaPlayers": [3],
+            "lookaheadDaysPostal": 7,
             "operatingHours": {
-                "start": 10,
+                "start": 19,
                 "end": 22
             }
         }

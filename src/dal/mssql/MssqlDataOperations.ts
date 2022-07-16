@@ -1,6 +1,7 @@
 import { IDatabaseConfig } from './DatabaseConfig';
 import {
     DataOperations,
+    MatchDatesForPostalReminder,
     MatchDatesForReminder,
     NextMatchSubmissionStatus,
 } from '../DataOperations';
@@ -26,6 +27,17 @@ export const MssqlDataOperations = (
         ): Promise<MatchDatesForReminder[]> => {
             const result = await callProc<MatchDatesForReminder>(
                 'telegram.getAllPlayerNextMatchDatesForReminder',
+                {
+                    lookaheadDays,
+                },
+            );
+            return result;
+        },
+        getAllPlayerNextMatchDatesForPostalReminder: async (
+            lookaheadDays: number,
+        ): Promise<MatchDatesForPostalReminder[]> => {
+            const result = await callProc<MatchDatesForPostalReminder>(
+                'telegram.getAllPlayerNextMatchDatesForPostalReminder',
                 {
                     lookaheadDays,
                 },
@@ -67,6 +79,17 @@ export const MssqlDataOperations = (
             request.input('reminderSent', sql.DateTime, reminderSent);
             await request.execute('telegram.setRemiderStatus');
         },
+        setPostalRemiderStatus: async (
+            playerId: number,
+            periodNumber: number,
+            reminderSent: Date,
+        ): Promise<void> => {
+            const request = await getRequest();
+            request.input('playerId', sql.Int, playerId);
+            request.input('periodNumber', sql.Int, periodNumber);
+            request.input('reminderSent', sql.DateTime, reminderSent);
+            await request.execute('telegram.setPostalRemiderStatus');
+        },
         getPlayersNextFixture: async (
             playerId: number,
         ): Promise<NextMatchSubmissionStatus | undefined> => {
@@ -79,6 +102,29 @@ export const MssqlDataOperations = (
                 return result.recordsets[0][0];
             } else {
                 return undefined;
+            }
+        },
+        getPlayerPredictions: async (
+            playerId: number,
+            periodNumber: number,
+        ) => {
+            const request = await getRequest();
+            request.input('player', sql.Int, playerId);
+            request.input('week', sql.Int, periodNumber);
+            const result = await request.execute(
+                'dbo.FC_GetPlayerPredictionWeek',
+            );
+            if (result.recordsets.length > 0) {
+                return result.recordsets[0]
+                    .filter((p) => Boolean(p.HomeScore))
+                    .map((p) => ({
+                        homeTeam: p.HomeTeam,
+                        awayTeam: p.AwayTeam,
+                        home: p.HomeScore,
+                        away: p.AwayScore,
+                    }));
+            } else {
+                return [];
             }
         },
     };
