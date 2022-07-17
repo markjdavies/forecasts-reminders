@@ -6,7 +6,6 @@
     "dependencies": {
         "@vercel/node": "^1.8.1",
         "axios": "^0.27.2",
-        "config": "^3.3.1",
         "date-fns": "^2.16.1",
         "date-fns-tz": "^1.0.10",
         "mssql": "^6.2.1",

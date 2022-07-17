@@ -5,38 +5,37 @@ import { postgridWrapper } from './postgrid';
 import { telegramReminderService } from '../reminder-implementations/telegramReminder';
 import { postgridReminderService } from '../reminder-implementations/postgridReminder';
 import { NowRequest, NowResponse } from '@vercel/node';
-import { IAppConfig } from './app-config/appConfig';
 import { logger } from './utils/logger';
-import Config from './config';
+import { config } from './config';
 
 export const configureReminderHandler = (): ((
     req: NowRequest,
     res: NowResponse,
 ) => Promise<void>) => {
-    const config = Config.get<IAppConfig>('app');
+    const appConfig = config();
 
-    const db = MssqlDataOperations(config.db);
+    const db = MssqlDataOperations(appConfig.db);
     const msgBuilder = messageBuilder(
         logger,
-        config.reminderService.scoreEntryUrl,
+        appConfig.reminderService.scoreEntryUrl,
     );
 
-    const telegram = telegramWrapper(config.telegram, logger);
+    const telegram = telegramWrapper(appConfig.telegram, logger);
     const telegramSender = telegramReminderService(
         logger,
         db,
         telegram,
         msgBuilder,
-        config.reminderService,
+        appConfig.reminderService,
     );
 
-    const postgrid = postgridWrapper(config.postgrid, logger);
+    const postgrid = postgridWrapper(appConfig.postgrid, logger);
     const postgridSender = postgridReminderService(
         logger,
         db,
         postgrid,
         msgBuilder,
-        config.reminderService,
+        appConfig.reminderService,
     );
 
     const handler = async (
