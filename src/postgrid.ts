@@ -1,31 +1,25 @@
 import axios from 'axios';
 import { Logger } from 'pino';
+import { PlayerPrediction } from './dal/DataOperations';
 import { IPostgridConfig } from './PostgridConfig';
 
 export interface IPostgridSender {
     send: (reminderWithScores: ReminderWithScores) => Promise<void>;
 }
 
-export type Prediction = {
-    homeTeam: string;
-    awayTeam: string;
-    home: number;
-    away: number;
-};
-
 export type ReminderWithScores = {
     contactId: string;
     greeting: string;
     matchSummary: string;
-    predictions: Prediction[];
+    predictions: PlayerPrediction[];
 };
 
-const mergePredictions = (predictions: Prediction[]) =>
-    predictions.reduce((variables, p, i) => {
-        variables[`home_team_${i - 1}`] = p.homeTeam;
-        variables[`away_team_${i - 1}`] = p.awayTeam;
-        variables[`home_${i - 1}`] = p.home;
-        variables[`away_${i - 1}`] = p.away;
+const mergePredictions = (predictions: PlayerPrediction[]) =>
+    predictions.reduce((variables, p) => {
+        variables[`home_team_${p.game}`] = p.homeTeam;
+        variables[`away_team_${p.game}`] = p.awayTeam;
+        variables[`home_${p.game}`] = p.home;
+        variables[`away_${p.game}`] = p.away;
         return variables;
     }, {});
 

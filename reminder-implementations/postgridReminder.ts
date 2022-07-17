@@ -36,9 +36,9 @@ export const postgridReminderService = (
                 reminder.periodNumber,
             );
 
-            log.info({ playerMatchSummary });
+            log.info({ playerMatchSummary, predictions });
             if (playerMatchSummary) {
-                const matchSummary = messageBuilder(playerMatchSummary);
+                const { matchSummary } = messageBuilder(playerMatchSummary);
                 await postgrid.send({
                     matchSummary,
                     contactId: reminder.contactId,

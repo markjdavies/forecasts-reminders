@@ -54,6 +54,7 @@ export interface NextMatchSubmissionStatus {
 }
 
 export interface PlayerPrediction {
+    game: number;
     homeTeam: string;
     awayTeam: string;
     home: number;

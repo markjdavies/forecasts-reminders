@@ -110,19 +110,12 @@ export const MssqlDataOperations = (
         ) => {
             const request = await getRequest();
             request.input('player', sql.Int, playerId);
-            request.input('week', sql.Int, periodNumber);
+            request.input('periodNumber', sql.Int, periodNumber);
             const result = await request.execute(
-                'dbo.FC_GetPlayerPredictionWeek',
+                'telegram.getPlayerPredictions',
             );
             if (result.recordsets.length > 0) {
-                return result.recordsets[0]
-                    .filter((p) => Boolean(p.HomeScore))
-                    .map((p) => ({
-                        homeTeam: p.HomeTeam,
-                        awayTeam: p.AwayTeam,
-                        home: p.HomeScore,
-                        away: p.AwayScore,
-                    }));
+                return result.recordsets[0].filter((p) => p.home !== null);
             } else {
                 return [];
             }
