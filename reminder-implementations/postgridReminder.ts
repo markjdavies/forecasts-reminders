@@ -3,7 +3,7 @@ import {
     DataOperations,
     MatchDatesForPostalReminder,
 } from '../src/dal/DataOperations';
-import { IReminderServiceConfig } from '../src/app-config/appConfig';
+import { AppConfig } from '../src/app-config/appConfig';
 import { IPostgridSender } from '../src/postgrid';
 import { MessageBuilder } from '../src/messageBuilder';
 import { utcToZonedTime } from 'date-fns-tz';
@@ -13,7 +13,7 @@ export const postgridReminderService = (
     dataOperations: DataOperations,
     postgrid: IPostgridSender,
     messageBuilder: MessageBuilder,
-    config: IReminderServiceConfig,
+    config: AppConfig,
 ): (() => Promise<MatchDatesForPostalReminder[]>) => {
     const { lookaheadDaysPostal } = config;
 

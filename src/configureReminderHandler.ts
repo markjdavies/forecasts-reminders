@@ -15,10 +15,7 @@ export const configureReminderHandler = (): ((
     const appConfig = config();
 
     const db = MssqlDataOperations(appConfig.db);
-    const msgBuilder = messageBuilder(
-        logger,
-        appConfig.reminderService.scoreEntryUrl,
-    );
+    const msgBuilder = messageBuilder(logger, appConfig.scoreEntryUrl);
 
     const telegram = telegramWrapper(appConfig.telegram, logger);
     const telegramSender = telegramReminderService(
@@ -26,7 +23,7 @@ export const configureReminderHandler = (): ((
         db,
         telegram,
         msgBuilder,
-        appConfig.reminderService,
+        appConfig,
     );
 
     const postgrid = postgridWrapper(appConfig.postgrid, logger);
@@ -35,7 +32,7 @@ export const configureReminderHandler = (): ((
         db,
         postgrid,
         msgBuilder,
-        appConfig.reminderService,
+        appConfig,
     );
 
     const handler = async (

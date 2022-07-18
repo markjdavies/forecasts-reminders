@@ -10,7 +10,9 @@
         "date-fns-tz": "^1.0.10",
         "mssql": "^6.2.1",
         "node-telegram-bot-api": "^0.50.0",
-        "pino": "^6.5.1"
+        "pino": "^6.5.1",
+        "znv": "^0.3.1",
+        "zod": "^3.17.9"
     },
     "devDependencies": {
         "@types/config": "0.0.36",

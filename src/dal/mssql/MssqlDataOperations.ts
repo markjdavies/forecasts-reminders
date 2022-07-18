@@ -1,4 +1,4 @@
-import { IDatabaseConfig } from './DatabaseConfig';
+import { DatabaseConfig } from './DatabaseConfig';
 import {
     DataOperations,
     MatchDatesForPostalReminder,
@@ -8,9 +8,7 @@ import {
 import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
 
-export const MssqlDataOperations = (
-    config: IDatabaseConfig,
-): DataOperations => {
+export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
     const connectString = `mssql://${config.username}:${config.password}@${config.host}/${config.databaseName}`;
 
     const getRequest = async (): Promise<sql.Request> => {

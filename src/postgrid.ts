@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Logger } from 'pino';
 import { PlayerPrediction } from './dal/DataOperations';
-import { IPostgridConfig } from './PostgridConfig';
+import { PostgridConfig } from './PostgridConfig';
 
 export interface IPostgridSender {
     send: (reminderWithScores: ReminderWithScores) => Promise<void>;
@@ -24,7 +24,7 @@ const mergePredictions = (predictions: PlayerPrediction[]) =>
     }, {});
 
 export const postgridWrapper = (
-    config: IPostgridConfig,
+    config: PostgridConfig,
     log: Logger,
 ): IPostgridSender => {
     const client = axios.create({

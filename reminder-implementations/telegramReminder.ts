@@ -3,10 +3,10 @@ import {
     DataOperations,
     MatchDatesForReminder,
 } from '../src/dal/DataOperations';
-import { IReminderServiceConfig } from '../src/app-config/appConfig';
 import { ITelegramSender } from '../src/telegram';
 import { MessageBuilder } from '../src/messageBuilder';
 import { utcToZonedTime } from 'date-fns-tz';
+import { AppConfig } from '../src/app-config/appConfig';
 
 export type ReminderResponse = {
     message?: string;
@@ -18,7 +18,7 @@ export const telegramReminderService = (
     dataOperations: DataOperations,
     telegram: ITelegramSender,
     messageBuilder: MessageBuilder,
-    config: IReminderServiceConfig,
+    config: AppConfig,
 ): (() => Promise<ReminderResponse>) => {
     const { lookaheadDays, operatingHours } = config;
 

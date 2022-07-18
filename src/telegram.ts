@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ITelegramConfig } from './TelegramConfig';
+import { TelegramConfig } from './TelegramConfig';
 import { Logger } from 'pino';
 import { ConfirmationMessage } from './messageBuilder';
 
@@ -8,7 +8,7 @@ export interface ITelegramSender {
 }
 
 export const telegramWrapper = (
-    config: ITelegramConfig,
+    config: TelegramConfig,
     log: Logger,
 ): ITelegramSender => {
     const client = axios.create({
