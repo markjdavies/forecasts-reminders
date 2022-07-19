@@ -1,8 +1,4 @@
-import { default as Config } from 'config';
+import { parseEnv } from 'znv';
+import { AppConfig, appConfigSchema } from './app-config/appConfig';
 
-if (process.env['NODE_ENV'] !== 'local') {
-    const configPath = `${__dirname}/../config/`;
-    process.env['NODE_CONFIG_DIR'] = configPath;
-}
-
-export default Config;
+export const config = (): AppConfig => parseEnv(process.env, appConfigSchema);

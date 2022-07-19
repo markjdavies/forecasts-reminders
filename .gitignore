@@ -111,3 +111,4 @@ dist
 
 # Local config
 config/local.*
+.vercel
