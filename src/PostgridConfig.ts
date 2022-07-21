@@ -5,5 +5,6 @@ export const postgridConfigModel = z.object({
     apiKey: z.string(),
     frontTemplateId: z.string(),
     backTemplateId: z.string(),
+    backTemplateEmptyId: z.string().default('template_s9gbsUSKh9J8Z9T222TE5v'),
 });
 export type PostgridConfig = z.infer<typeof postgridConfigModel>;
