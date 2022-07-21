@@ -43,7 +43,10 @@ export const postgridWrapper = (
             await client.post('postcards', {
                 to: contactId,
                 frontTemplate: config.frontTemplateId,
-                backTemplate: config.backTemplateId,
+                backTemplate:
+                    predictions?.length > 0
+                        ? config.backTemplateId
+                        : config.backTemplateEmptyId,
                 size: '6x4',
                 mailingClass: 'standard_class',
                 mergeVariables: {
