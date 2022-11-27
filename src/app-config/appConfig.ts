@@ -29,9 +29,7 @@ export const appConfigSchema = {
     postgrid: postgridConfigModel,
     db: databaseConfigModel,
     log: logConfigModel,
-    scoreEntryUrl: z
-        .string()
-        .default('https://forecasts.apphb.com/EnterScores/"'),
+    scoreEntryUrl: z.string().default('https://somewhen.uk/EnterScores/"'),
     lookaheadDays: z.number().int().default(2),
     lookaheadDaysPostal: z.number().int().default(7),
     operatingHours: operatingHoursModel,
