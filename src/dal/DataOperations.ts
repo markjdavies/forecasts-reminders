@@ -6,6 +6,7 @@ export interface DataOperations {
         lookaheadDays: number,
     ) => Promise<MatchDatesForPostalReminder[]>;
     getChatIdForPlayer: (playerId: number) => Promise<string>;
+    getPlayerById: (id: number) => Promise<Player>;
     getPlayersNextMatchWeek: (playerId: number) => Promise<number>;
     getNextMatchPeriod: () => Promise<number>;
     getReminderStatus: (playerId: number, period: number) => Promise<boolean>;
@@ -51,6 +52,12 @@ export interface NextMatchSubmissionStatus {
     homeTeam: string;
     awayTeam: string;
     submissionTime: Date;
+}
+
+export interface Player {
+    id: number;
+    name: string;
+    emailAddress: string;
 }
 
 export interface PlayerPrediction {
