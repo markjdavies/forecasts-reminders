@@ -4,13 +4,13 @@ import { telegramWrapper } from './telegram';
 import { postgridWrapper } from './postgrid';
 import { telegramReminderService } from '../reminder-implementations/telegramReminder';
 import { postgridReminderService } from '../reminder-implementations/postgridReminder';
-import { NowRequest, NowResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import { logger } from './utils/logger';
 import { config } from './config';
 
 export const configureReminderHandler = (): ((
-    req: NowRequest,
-    res: NowResponse,
+    req: VercelRequest,
+    res: VercelResponse,
 ) => Promise<void>) => {
     const appConfig = config();
 
@@ -36,8 +36,8 @@ export const configureReminderHandler = (): ((
     );
 
     const handler = async (
-        _req: NowRequest,
-        res: NowResponse,
+        _req: VercelRequest,
+        res: VercelResponse,
     ): Promise<void> => {
         const postal = await postgridSender();
         const telegram = await telegramSender();

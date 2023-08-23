@@ -33,6 +33,8 @@ export const appConfigSchema = {
     lookaheadDays: z.number().int().default(2),
     lookaheadDaysPostal: z.number().int().default(7),
     operatingHours: operatingHoursModel,
+    sendgridApiKey: z.string(),
+    fromAddress: z.string()
 };
 export const appConfigModel = z.object(appConfigSchema);
 export type AppConfig = z.infer<typeof appConfigModel>;
