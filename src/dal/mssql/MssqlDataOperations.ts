@@ -10,7 +10,7 @@ import * as sql from 'mssql';
 import { storedProcWrapper } from './MssqlSpWrapper';
 
 export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
-    const connectString = `mssql://${config.username}:${config.password}@${config.host}/${config.databaseName}`;
+    const connectString = `Server=${config.host},1433;Database=${config.databaseName};User Id=${config.username};Password=${config.password};Encrypt=false`;
 
     const getRequest = async (): Promise<sql.Request> => {
         const pool = new sql.ConnectionPool(connectString);
@@ -45,32 +45,32 @@ export const MssqlDataOperations = (config: DatabaseConfig): DataOperations => {
             return result;
         },
 
-        getChatIdForPlayer: (playerId: number): Promise<string> =>
-            callProc<string>('telegram.GetChatIdForPlayer', {
+        getChatIdForPlayer: async (playerId: number): Promise<string> =>
+            (await callProc<string>('telegram.GetChatIdForPlayer', {
                 playerId,
-            })[0][0],
+            }))[0][0],
 
-        getPlayerById: (id) =>
-            callProc<Player>('telegram.GetPlayerById', { id })[0][0],
+        getPlayerById: async (id) =>
+            (await callProc<Player>('telegram.GetPlayerById', { id }))[0],
 
-        getPlayersNextMatchWeek: (playerId: number): Promise<number> =>
-            callProc<number>('telegram.getPlayersNextMatchWeek', {
+        getPlayersNextMatchWeek: async (playerId: number): Promise<number> =>
+            (await callProc<number>('telegram.getPlayersNextMatchWeek', {
                 playerId,
-            })[0][0],
+            }))[0][0],
 
         getNextMatchPeriod: async (): Promise<number> =>
-            callProc<number>(
+            (await callProc<number>(
                 'telegram.getPlayersNextMatchWeek',
-            )[0][0],
+            ))[0][0],
 
-        getReminderStatus: (
+        getReminderStatus: async (
             playerId: number,
             periodNumber: number,
         ): Promise<boolean> =>
-            callProc<boolean>('telegram.getReminderStatus', {
+            (await callProc<boolean>('telegram.getReminderStatus', {
                 playerId,
                 periodNumber,
-            })[0][0],
+            }))[0][0],
 
         setRemiderStatus: async (
             playerId: number,
