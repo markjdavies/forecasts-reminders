@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { emailModel, mailer } from '../src/sendgrid/sendgrid';
 import { config } from '../src/config';
 // import { MssqlDataOperations } from '../src/dal/mssql/MssqlDataOperations';
-import { logger } from '../src/utils/logger';
+// import { logger } from '../src/utils/logger';
 import { Player } from '../src/dal/DataOperations';
 
 const appConfig = config();
@@ -27,8 +27,6 @@ const handler = async (
     // const nextFixture = await db.getPlayersNextFixture(player.id);
 
     const player = { emailAddress: address, id: 0, name: '' } as Player;
-
-    logger.info({ player });
 
     await send(player, email);
 
